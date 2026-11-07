@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>988 Training Insights</title>
+<style>
+:root{
+  color-scheme: light;
+  --bg:#f6f5f2; --surface:#fcfcfb; --surface-2:#f0efeb; --border:#e3e1db;
+  --text:#0b0b0b; --text-2:#52514e; --muted:#7d7b75;
+  --after:#2a78d6; --after-soft:#cde2fb; --before:#a9a7a0;
+  --accent:#2a78d6; --grid:#e8e6e0;
+  --warn-bg:#fff4dc; --warn-ink:#7a5200; --hide-bg:#eeeeec; --hide-ink:#6b6a66;
+  --pos:#1b7f55; --neg:#b23b3b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 16px 64px}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:18px}
+h1{font-size:26px;line-height:1.2;margin:0;letter-spacing:-.01em}
+.sub{color:var(--text-2);margin:4px 0 0;font-size:14px}
+.meta{color:var(--muted);font-size:12px;text-align:right}
+.filters{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0 12px;border-bottom:1px solid var(--border);margin-bottom:20px;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end}
+.f{display:flex;flex-direction:column;gap:3px;min-width:120px}
+.f label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}
+.chk{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-2);padding-bottom:6px}
+.reset{font:inherit;font-size:13px;background:none;border:none;color:var(--accent);cursor:pointer;padding:0 0 8px}
+.banner{display:none;background:var(--warn-bg);color:var(--warn-ink);border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:22px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.kpi .l{font-size:13px;color:var(--text-2)}
+.kpi .v{font-size:30px;font-weight:650;letter-spacing:-.02em;line-height:1.15;margin-top:4px;font-variant-numeric:tabular-nums}
+.kpi .d{font-size:13px;color:var(--muted);margin-top:2px}
+.kpi .d b{color:var(--pos);font-weight:600}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 18px 16px;margin-bottom:16px;min-width:0}
+.card h2{font-size:17px;margin:0 0 2px;letter-spacing:-.005em}
+.card .why{color:var(--text-2);font-size:13.5px;margin:0 0 14px}
+.legend{display:flex;gap:14px;font-size:12.5px;color:var(--text-2);margin-bottom:8px;flex-wrap:wrap}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+svg text{fill:var(--text-2);font-size:12px}
+.note{font-size:12.5px;color:var(--muted);margin-top:10px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);font-weight:600;text-align:right;padding:8px 8px;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 8px;border-bottom:1px solid var(--grid);text-align:right;white-space:nowrap}
+tr.hidden td{color:var(--hide-ink)}
+.badge{display:inline-block;font-size:11px;font-weight:600;border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:1px}
+.badge.warn{background:var(--warn-bg);color:var(--warn-ink)}
+.badge.hide{background:var(--hide-bg);color:var(--hide-ink)}
+.cellbar{display:inline-block;height:8px;border-radius:0 4px 4px 0;background:var(--after);vertical-align:middle;margin-left:6px;opacity:.85}
+.pos{color:var(--pos)} .neg{color:var(--neg)}
+.ctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.ctl label{font-size:13px;color:var(--text-2)}
+#tip{position:fixed;pointer-events:none;background:var(--text);color:var(--surface);font-size:12.5px;line-height:1.4;padding:7px 10px;border-radius:8px;max-width:280px;opacity:0;transition:opacity .08s;z-index:50}
+.dq{font-size:13px}
+.dq td{white-space:normal}
+details summary{cursor:pointer;color:var(--accent);font-size:14px}
+.method p{font-size:13.5px;color:var(--text-2);margin:8px 0}
+.empty{color:var(--muted);font-size:14px;padding:30px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Understanding 988 &mdash; Training Insights</h1>
+      <p class="sub">What participants learned, how the training landed, and where results differ across communities.</p>
+    </div>
+    <div class="meta"><span id="meta"></span></div>
+  </header>
+
+  <div class="filters" role="region" aria-label="Filters">
+    <div class="f"><label for="fFrom">From</label><select id="fFrom"></select></div>
+    <div class="f"><label for="fTo">To</label><select id="fTo"></select></div>
+    <div class="f"><label for="fCounty">County</label><select id="fCounty"></select></div>
+    <div class="f"><label for="fRole">Participant role</label><select id="fRole"></select></div>
+    <div class="f"><label for="fLang">Survey language</label><select id="fLang"></select></div>
+    <label class="chk"><input type="checkbox" id="fRev"> Include likely reversed-scale responses</label>
+    <button class="reset" id="reset" type="button">Reset filters</button>
+  </div>
+
+  <div class="banner" id="banner"></div>
+
+  <section class="kpis" id="kpis" aria-label="Headline numbers"></section>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>What participants learned</h2>
+      <p class="why">Share who agree with each statement, before vs. after the training (same people). &ldquo;Before&rdquo; was rated after the session, looking back.</p>
+      <div class="legend"><span><span class="sw" style="background:var(--before)"></span>Before (looking back)</span><span><span class="sw" style="background:var(--after)"></span>After training</span></div>
+      <div id="dumbbell"></div>
+    </div>
+    <div class="card">
+      <h2>Knowing vs. intending to call</h2>
+      <p class="why">Among people who say they <em>know when to use 988</em>, how likely they are to actually call (0&ndash;10). Only asked on some survey versions.</p>
+      <div id="intent"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Where results differ</h2>
+    <p class="why">Compare groups side by side. Groups under <span id="warnN"></span> responses are marked small; under <span id="hideN"></span> are hidden to protect privacy and avoid misleading percentages. Click a column to sort.</p>
+    <div class="ctl"><label for="cmp">Compare by</label>
+      <select id="cmp"><option value="county">County</option><option value="roleGroup">Participant role</option><option value="lang">Survey language</option><option value="quarter">Quarter</option><option value="session">Training session (date + county)</option></select>
+    </div>
+    <div class="tablewrap"><table id="cmpTable"></table></div>
+    <p class="note">NPS (Net Promoter Score) = % rating 9&ndash;10 minus % rating 0&ndash;6 on &ldquo;How likely are you to recommend this training?&rdquo; Ranges from &minus;100 to +100.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Trend over time</h2>
+      <p class="why">Monthly results by training date. Hollow points = fewer than <span class="warnN2"></span> responses that month.</p>
+      <div class="ctl"><label for="trendMetric">Metric</label>
+        <select id="trendMetric"><option value="nps">Would recommend (NPS)</option><option value="when">Know when to use 988 (after, %)</option><option value="engaged">Presenter engaged participants (%)</option><option value="n">Responses</option></select></div>
+      <div id="trend"></div>
+    </div>
+    <div class="card">
+      <h2>How likely to recommend</h2>
+      <p class="why">Distribution of 0&ndash;10 ratings. A cluster at 5&ndash;8 means participants were lukewarm rather than negative.</p>
+      <div id="recHist"></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Most valuable thing learned</h2>
+      <p class="why">Open-ended comments, coded into themes by keyword rules (a comment can have several). Share of people who answered.</p>
+      <div id="thV"></div>
+    </div>
+    <div class="card">
+      <h2>How to improve / what people still ask</h2>
+      <p class="why" id="qShare"></p>
+      <div id="thI"></div>
+    </div>
+  </div>
+
+  <div class="card method">
+    <h2>Data quality &amp; method</h2>
+    <p>Every cleaning decision the pipeline made is listed below so results can be traced. Nothing is silently deleted: flagged responses stay in the data and can be included with the checkbox above.</p>
+    <details><summary>Show data-quality log</summary><div class="tablewrap"><table class="dq" id="dq"></table></div></details>
+    <p><strong>Limitations.</strong> &ldquo;Before&rdquo; ratings are retrospective (asked after the training), which tends to overstate gains. The survey is anonymous and voluntary, so it reflects people who chose to respond. Most responses come from Anne Arundel and Prince George&rsquo;s students; results for other counties, adults, and Spanish-language respondents rest on small samples. &ldquo;Likely to call 988&rdquo; was only asked on some survey versions. Comment themes are keyword-based and miss some meaning; read the comments themselves before acting on a small theme.</p>
+  </div>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script>
+const D = /*__DATA__*/null;
+const S = D.settings;
+// row fields
+const R = D.rows.map(r => ({date:r[0], month:r[0].slice(0,7), county:D.counties[r[1]], lang:r[2]?'Spanish':'English', roleBits:r[3], roleGroup:D.roleGroups[r[4]],
+  pre:r[5], post:r[6], del:r[7], rec:r[8], call:r[9], vt:r[10], it:r[11], isQ:r[12], rev:r[13], fast:r[14]}));
+R.forEach(r => { const [y,m]=r.date.split('-').map(Number); r.quarter = y+' Q'+Math.ceil(m/3); r.session = r.date+' | '+r.county; });
+
+const $ = id => document.getElementById(id);
+const fmt = (v,d=0) => v==null||isNaN(v) ? '—' : (+v).toFixed(d);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// ---------- filters
+const months = [...new Set(R.map(r=>r.month))].sort();
+const mName = m => { const [y,mm]=m.split('-'); return new Date(+y, +mm-1, 1).toLocaleString('en-US',{month:'short',year:'numeric'}); };
+function opts(sel, list, val){ sel.innerHTML = list.map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join(''); if(val!=null) sel.value=val; }
+opts($('fFrom'), months.map(m=>[m,mName(m)]), months[0]);
+opts($('fTo'), months.map(m=>[m,mName(m)]), months[months.length-1]);
+const countyCounts = {}; R.forEach(r=>countyCounts[r.county]=(countyCounts[r.county]||0)+1);
+opts($('fCounty'), [['all','All counties'],['md','Maryland only'], ...D.counties.slice().sort((a,b)=>countyCounts[b]-countyCounts[a]).map(c=>[c,`${c} (${countyCounts[c]})`])]);
+opts($('fRole'), [['all','All roles'], ...D.roles.map((r,i)=>[String(i), r]), ['adult','All adults (non-students)']]);
+opts($('fLang'), [['all','All'],['English','English'],['Spanish','Spanish']]);
+$('warnN').textContent = S.small_group_warn_n; $('hideN').textContent = S.small_group_hide_n;
+document.querySelectorAll('.warnN2').forEach(e=>e.textContent=S.small_group_warn_n);
+$('meta').textContent = `Data: ${D.sources.join(', ')} · built ${D.generated}`;
+
+function filtered(){
+  const f=$('fFrom').value, t=$('fTo').value, c=$('fCounty').value, ro=$('fRole').value, l=$('fLang').value, rev=$('fRev').checked;
+  return R.filter(r => r.month>=f && r.month<=t
+    && (c==='all' || (c==='md' ? D.maryland.includes(r.county) : r.county===c))
+    && (ro==='all' || (ro==='adult' ? (r.roleBits & 0b1110) && !(r.roleBits & 1) : (r.roleBits >> +ro) & 1))
+    && (l==='all' || r.lang===l)
+    && (rev || !r.rev));
+}
+
+// ---------- metrics (mirror run_pipeline.py: summarize)
+const A = () => S.agree_threshold;
+function knowledge(rows, i){
+  const p = rows.filter(r=>r.pre[i]!=null && r.post[i]!=null);
+  const n=p.length; if(!n) return {n:0};
+  const pre=100*p.filter(r=>r.pre[i]>=A()).length/n, post=100*p.filter(r=>r.post[i]>=A()).length/n;
+  return {n, pre, post, gain:post-pre};
+}
+function nps(rows){ const v=rows.map(r=>r.rec).filter(x=>x!=null); const n=v.length; if(!n) return {n:0};
+  const p=v.filter(x=>x>=S.promoter_min).length, d=v.filter(x=>x<=S.detractor_max).length; return {n, nps:100*(p-d)/n, prom:100*p/n}; }
+function pctAgree(rows, i){ const v=rows.map(r=>r.del[i]).filter(x=>x!=null); return v.length? {n:v.length, pct:100*v.filter(x=>x>=A()).length/v.length} : {n:0}; }
+function call(rows){ const v=rows.map(r=>r.call).filter(x=>x!=null); return v.length? {n:v.length, hi:100*v.filter(x=>x>=9).length/v.length} : {n:0}; }
+
+// ---------- tooltip
+const tip=$('tip');
+document.addEventListener('mousemove', e => {
+  const t = e.target.closest('[data-tip]');
+  if(!t){ tip.style.opacity=0; return; }
+  tip.innerHTML = t.getAttribute('data-tip'); tip.style.opacity=1;
+  const x=Math.min(e.clientX+14, window.innerWidth-tip.offsetWidth-8), y=e.clientY+14 + tip.offsetHeight > window.innerHeight ? e.clientY-tip.offsetHeight-10 : e.clientY+14;
+  tip.style.left=x+'px'; tip.style.top=y+'px';
+});
+
+// ---------- KPIs
+function kpis(rows){
+  const tooFew = rows.length < S.small_group_hide_n, none={n:0};
+  const w=tooFew?none:knowledge(rows,2), ds=tooFew?none:knowledge(rows,1), np=tooFew?none:nps(rows), c=tooFew?none:call(rows), sessions=new Set(rows.map(r=>r.session)).size;
+  const excl = $('fRev').checked ? 0 : R.filter(r=>r.rev).length;
+  const card=(l,v,d,t)=>`<div class="kpi" data-tip="${esc(t)}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`;
+  const g = x => x>=0 ? `<b>+${fmt(x)} pts</b>` : `${fmt(x)} pts`;
+  $('kpis').innerHTML = [
+    card('Responses', rows.length.toLocaleString(), `${sessions} training sessions${excl?` · ${excl} flagged excluded`:''}`, 'Survey responses matching the current filters. A session = one training date in one county.'),
+    card('Know when to use 988', w.n?fmt(w.post)+'%':'—', w.n?`${g(w.gain)} vs. before (${fmt(w.pre)}%)`:'no data', `Agree or strongly agree after training. n = ${w.n}`),
+    card('Can describe how 988 works', ds.n?fmt(ds.post)+'%':'—', ds.n?`${g(ds.gain)} vs. before (${fmt(ds.pre)}%)`:'no data', `Agree or strongly agree after training. n = ${ds.n}`),
+    card('Would recommend (NPS)', np.n?(np.nps>0?'+':'')+fmt(np.nps):'—', np.n?`${fmt(np.prom)}% rated 9–10`:'no data', `Net Promoter Score, n = ${np.n}`),
+    card('Very likely to call 988', c.n?fmt(c.hi)+'%':'—', c.n?`rated 9–10 · n = ${c.n}`:'question not asked in this selection', 'Only asked on some survey versions, so the sample is smaller than total responses.')
+  ].join('');
+}
+
+// ---------- dumbbell
+function dumbbell(rows){
+  const W=520, rowH=58, top=8, left=16, right=40, H=top+rowH*3+26;
+  const x = v => left + (W-left-right)*v/100;
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Before and after agreement for three knowledge statements">`;
+  [0,25,50,75,100].forEach(t=>{ s+=`<line x1="${x(t)}" x2="${x(t)}" y1="${top}" y2="${H-22}" stroke="var(--grid)"/><text x="${x(t)}" y="${H-6}" text-anchor="middle">${t}%</text>`; });
+  D.knowledge.forEach((lab,i)=>{
+    const k=knowledge(rows,i), y=top+rowH*i+36;
+    s+=`<text x="${left-8}" y="${y-18}" style="fill:var(--text);font-size:13px">${esc(lab)}</text>`;
+    if(!k.n || k.n<S.small_group_hide_n){ s+=`<text x="${left-8}" y="${y+4}">Fewer than ${S.small_group_hide_n} responses</text>`; return; }
+    s+=`<line x1="${x(k.pre)}" x2="${x(k.post)}" y1="${y}" y2="${y}" stroke="var(--after-soft)" stroke-width="6" stroke-linecap="round"/>`;
+    s+=`<circle cx="${x(k.pre)}" cy="${y}" r="7" fill="var(--before)" stroke="var(--surface)" stroke-width="2" data-tip="Before: ${fmt(k.pre,1)}% agreed<br>n = ${k.n}"/>`;
+    s+=`<circle cx="${x(k.post)}" cy="${y}" r="7" fill="var(--after)" stroke="var(--surface)" stroke-width="2" data-tip="After: ${fmt(k.post,1)}% agreed<br>Gain: +${fmt(k.gain,1)} pts · n = ${k.n}"/>`;
+    s+=`<text x="${x(k.pre)-11}" y="${y+4}" text-anchor="end">${fmt(k.pre)}%</text><text x="${x(k.post)+11}" y="${y+4}" style="fill:var(--text);font-weight:600">${fmt(k.post)}%</text>`;
+  });
+  $('dumbbell').innerHTML = s+'</svg>';
+}
+
+// ---------- vertical histogram (0-10)
+function hist(el, values, label, emptyMsg){
+  const n=values.length; if(n<S.small_group_hide_n){ $(el).innerHTML=`<div class="empty">${emptyMsg}</div>`; return; }
+  const counts=Array(11).fill(0); values.forEach(v=>counts[Math.round(v)]++);
+  const max=Math.max(...counts.map(c=>c/n));
+  const W=520,H=210,b=26,l=6,top=18, bw=(W-l*2)/11;
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${esc(label)}">`;
+  s+=`<line x1="0" x2="${W}" y1="${H-b}" y2="${H-b}" stroke="var(--border)"/>`;
+  counts.forEach((c,i)=>{ const p=c/n, h=(H-b-top)*p/max, x=l+i*bw+2;
+    s+=`<rect x="${x}" y="${H-b-h}" width="${bw-4}" height="${Math.max(h,0)}" rx="4" fill="var(--after)" opacity="${i>=9?1:i>=7?.7:.45}"/>`;
+    s+=`<rect x="${x}" y="${top-14}" width="${bw-4}" height="${H-b-top+14}" fill="transparent" data-tip="Rated ${i}: ${c} people (${fmt(100*p,1)}%)"/>`;
+    if(p>0.04) s+=`<text x="${x+(bw-4)/2}" y="${H-b-h-4}" text-anchor="middle">${fmt(100*p)}%</text>`;
+    s+=`<text x="${x+(bw-4)/2}" y="${H-8}" text-anchor="middle">${i}</text>`;
+  });
+  $(el).innerHTML = s+`</svg><p class="note">n = ${n}. Darker bars = 9–10 (promoters); lightest = 0–6.</p>`;
+}
+
+function intent(rows){
+  const v=rows.filter(r=>r.post[2]!=null && r.post[2]>=A() && r.call!=null).map(r=>r.call);
+  hist('intent', v, 'Likelihood to call 988 among those who know when to use it', 'The &ldquo;likely to call 988&rdquo; question was not asked (or fewer than '+S.small_group_hide_n+' answers) for this selection.');
+  if(v.length>=S.small_group_hide_n){ const hi=100*v.filter(x=>x>=9).length/v.length, lo=100*v.filter(x=>x<=5).length/v.length;
+    $('intent').insertAdjacentHTML('beforeend', `<p class="note"><strong style="color:var(--text)">${fmt(hi)}%</strong> are very likely (9–10) to call; ${fmt(lo)}% rated 5 or lower.</p>`); }
+}
+
+// ---------- comparison table
+let sortKey='n', sortDir=-1;
+function cmpTable(rows){
+  const by=$('cmp').value, groups={};
+  rows.forEach(r=>{ (groups[r[by]] ||= []).push(r); });
+  const cols=[['g','Group'],['n','Responses'],['when','Know when (after)'],['whenGain','Know-when gain'],['descGain','Describe 988 gain'],['nps','NPS'],['eng','Presenter engaged'],['call','Very likely to call']];
+  let data=Object.entries(groups).map(([g,rs])=>{ const w=knowledge(rs,2), d=knowledge(rs,1), np=nps(rs), e=pctAgree(rs,0), c=call(rs);
+    return {g, n:rs.length, when:w.post, whenGain:w.gain, descGain:d.gain, nps:np.nps, eng:e.pct, engN:e.n, call:c.hi, callN:c.n}; });
+  data.sort((a,b)=>{ const x=a[sortKey], y=b[sortKey]; if(sortKey==='g') return sortDir*String(x).localeCompare(String(y)); return sortDir*((x??-999)-(y??-999)); });
+  if(by==='session') data=data.filter(d=>d.n>=S.small_group_hide_n);
+  let h='<thead><tr>'+cols.map(([k,l])=>`<th data-k="${k}" aria-sort="${sortKey===k?(sortDir>0?'ascending':'descending'):'none'}">${l}${sortKey===k?(sortDir>0?' ▲':' ▼'):''}</th>`).join('')+'</tr></thead><tbody>';
+  data.forEach(d=>{
+    const hidden=d.n<S.small_group_hide_n, warn=!hidden && d.n<S.small_group_warn_n;
+    const badge = hidden?`<span class="badge hide">hidden · n&lt;${S.small_group_hide_n}</span>` : warn?`<span class="badge warn">small sample</span>`:'';
+    const cell=(v,dec=0,suf='%')=> hidden? '—' : fmt(v,dec)+(v==null?'':suf);
+    const sign=(v)=> hidden||v==null? '—' : `<span class="${v>=0?'pos':'neg'}">${v>=0?'+':''}${fmt(v)}</span>`;
+    h+=`<tr class="${hidden?'hidden':''}"><td>${esc(d.g)}${badge}</td><td>${d.n}</td>
+      <td>${cell(d.when)}${hidden||d.when==null?'':`<span class="cellbar" style="width:${Math.max(2,(d.when-50)*1.0)}px" data-tip="${fmt(d.when,1)}% know when to use 988"></span>`}</td>
+      <td>${sign(d.whenGain)}</td><td>${sign(d.descGain)}</td><td>${sign(d.nps)}</td>
+      <td>${cell(d.eng)}${!hidden && d.engN && d.engN<d.n*0.8?` <span class="badge hide" data-tip="Only ${d.engN} of ${d.n} answered this question (some survey versions omitted it)">n=${d.engN}</span>`:''}</td>
+      <td>${d.callN? (hidden?'—':fmt(d.call)+'%'+(d.callN<S.small_group_warn_n?` <span class="badge warn" data-tip="Only ${d.callN} people answered this question">n=${d.callN}</span>`:` <span class="note" style="margin:0">n=${d.callN}</span>`)) : '<span class="note" style="margin:0">not asked</span>'}</td></tr>`;
+  });
+  if(!data.length) h+=`<tr><td colspan="8" class="empty">No group has ${S.small_group_hide_n}+ responses for this selection.</td></tr>`;
+  $('cmpTable').innerHTML = h+'</tbody>';
+  $('cmpTable').querySelectorAll('th').forEach(th=>th.onclick=()=>{ const k=th.dataset.k; if(sortKey===k) sortDir*=-1; else { sortKey=k; sortDir=k==='g'?1:-1; } render(); });
+}
+
+// ---------- trend
+function trend(rows){
+  const m=$('trendMetric').value, byM={};
+  rows.forEach(r=>{ (byM[r.month] ||= []).push(r); });
+  const pts=Object.keys(byM).sort().map(k=>{ const rs=byM[k]; let v=null;
+    if(m==='nps') v=nps(rs).nps; else if(m==='when') v=knowledge(rs,2).post; else if(m==='engaged') v=pctAgree(rs,0).pct; else v=rs.length;
+    return {k, n:rs.length, v}; }).filter(p=>p.v!=null && p.n>=S.small_group_hide_n);
+  if(pts.length<2){ $('trend').innerHTML='<div class="empty">Not enough months with data for this selection.</div>'; return; }
+  const W=520,H=230,l=40,r=26,t=14,b=30;
+  let lo = m==='nps'? -100 : 0, hi = m==='n'? Math.max(...pts.map(p=>p.v))*1.1 : 100;
+  if(m==='when'||m==='engaged'){ lo = Math.max(0, Math.floor(Math.min(...pts.map(p=>p.v))/10)*10-10); }
+  const x=i=> l + (W-l-r)*(pts.length===1?0.5:i/(pts.length-1)), y=v=> t + (H-t-b)*(1-(v-lo)/(hi-lo));
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Monthly trend">`;
+  const ticks = m==='nps'? [-100,-50,0,50,100] : m==='n'? [0, Math.round(hi/2), Math.round(hi)] : [lo, Math.round((lo+100)/2), 100];
+  ticks.forEach(v=>{ s+=`<line x1="${l}" x2="${W-r}" y1="${y(v)}" y2="${y(v)}" stroke="${v===0&&m==='nps'?'var(--border)':'var(--grid)'}"/><text x="${l-6}" y="${y(v)+4}" text-anchor="end">${v}${m==='when'||m==='engaged'?'%':''}</text>`; });
+  s+=`<polyline fill="none" stroke="var(--after)" stroke-width="2" stroke-linejoin="round" points="${pts.map((p,i)=>x(i)+','+y(p.v)).join(' ')}"/>`;
+  pts.forEach((p,i)=>{ const small=p.n<S.small_group_warn_n;
+    s+=`<circle cx="${x(i)}" cy="${y(p.v)}" r="5" fill="${small?'var(--surface)':'var(--after)'}" stroke="var(--after)" stroke-width="2"/>`;
+    s+=`<rect x="${x(i)-14}" y="${t}" width="28" height="${H-t-b}" fill="transparent" data-tip="${mName(p.k)}<br>${m==='n'?p.v+' responses':fmt(p.v,1)+(m==='nps'?' NPS':'%')} · n = ${p.n}${small?'<br><em>small sample</em>':''}"/>`;
+    if(pts.length<=14) s+=`<text x="${x(i)}" y="${H-10}" text-anchor="middle" style="font-size:10.5px">${mName(p.k).replace(' 20',' ’')}</text>`;
+  });
+  $('trend').innerHTML=s+'</svg>';
+}
+
+// ---------- themes (horizontal bars)
+function themes(el, rows, key, names){
+  const ans=rows.filter(r=>r[key].length); const n=ans.length;
+  if(n<S.small_group_hide_n){ $(el).innerHTML='<div class="empty">Too few comments for this selection.</div>'; return; }
+  const c=Array(names.length).fill(0); ans.forEach(r=>r[key].forEach(i=>c[i]++));
+  const items=names.map((nm,i)=>({nm, c:c[i], p:100*c[i]/n})).filter(d=>d.c>0).sort((a,b)=> (a.nm==='Other')-(b.nm==='Other') || b.c-a.c);
+  const max=Math.max(...items.map(d=>d.p));
+  const W=520, rowH=24, lw=230, H=items.length*rowH+4;
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Comment themes">`;
+  items.forEach((d,i)=>{ const y=i*rowH+2, w=(W-lw-46)*d.p/max;
+    s+=`<text x="${lw-8}" y="${y+15}" text-anchor="end" style="fill:${d.nm==='Other'?'var(--muted)':'var(--text)'}">${esc(d.nm)}</text>`;
+    s+=`<rect x="${lw}" y="${y+4}" width="${Math.max(w,2)}" height="14" rx="4" fill="${d.nm==='Other'?'var(--before)':'var(--after)'}"/>`;
+    s+=`<text x="${lw+Math.max(w,2)+6}" y="${y+15}">${fmt(d.p)}%</text>`;
+    s+=`<rect x="0" y="${y}" width="${W}" height="${rowH}" fill="transparent" data-tip="${esc(d.nm)}<br>${d.c} of ${n} comments (${fmt(d.p,1)}%)"/>`;
+  });
+  $(el).innerHTML = s+`</svg><p class="note">n = ${n} people who wrote a comment. &ldquo;Other&rdquo; = not matched by any keyword rule.</p>`;
+}
+
+function render(){
+  const rows=filtered();
+  const ban=$('banner');
+  if(rows.length<S.small_group_warn_n){ ban.style.display='block'; ban.textContent = rows.length<S.small_group_hide_n ? `Only ${rows.length} responses match these filters — too few to show results. Widen the filters.` : `Only ${rows.length} responses match these filters. Treat percentages as rough indications, not firm conclusions.`; }
+  else ban.style.display='none';
+  kpis(rows);
+  if(rows.length<S.small_group_hide_n){ ['dumbbell','intent','trend','recHist','thV','thI'].forEach(id=>$(id).innerHTML='<div class="empty">Too few responses.</div>'); $('qShare').textContent=''; cmpTable(rows); return; }
+  dumbbell(rows); intent(rows); cmpTable(rows); trend(rows);
+  hist('recHist', rows.map(r=>r.rec).filter(x=>x!=null), 'Likelihood to recommend distribution', 'Too few ratings.');
+  themes('thV', rows, 'vt', D.valuableThemes); themes('thI', rows, 'it', D.improveThemes);
+  const ia=rows.filter(r=>r.it.length), q=ia.filter(r=>r.isQ).length;
+  $('qShare').innerHTML = ia.length? `<strong style="color:var(--text)">${fmt(100*q/ia.length)}%</strong> of answers to &ldquo;How can we improve?&rdquo; were actually questions people still had about 988 &mdash; a ready-made FAQ for future sessions.` : '';
+}
+
+$('dq').innerHTML = '<thead><tr><th>Step</th><th style="text-align:left">What was done</th><th>Rows</th></tr></thead><tbody>' +
+  D.quality.map(q=>`<tr><td>${esc(q.step)}</td><td style="text-align:left">${esc(q.detail)}</td><td>${q.rows_affected}</td></tr>`).join('') + '</tbody>';
+['fFrom','fTo','fCounty','fRole','fLang','fRev','cmp','trendMetric'].forEach(id=>$(id).addEventListener('change', render));
+$('reset').onclick=()=>{ $('fFrom').value=months[0]; $('fTo').value=months[months.length-1]; ['fCounty','fRole','fLang'].forEach(i=>$(i).value='all'); $('fRev').checked=false; render(); };
+render();
+</script>
+</body>
+</html>

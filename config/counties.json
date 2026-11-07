@@ -1,0 +1,20 @@
+{
+  "_comment": "Spellings are matched after lowercasing, removing the word 'county', and dropping anything after ' with '. Add a new alias here if a new spelling shows up in the data-quality report.",
+  "maryland_jurisdictions": [
+    "Allegany", "Anne Arundel", "Baltimore City", "Baltimore County", "Calvert", "Caroline",
+    "Carroll", "Cecil", "Charles", "Dorchester", "Frederick", "Garrett", "Harford", "Howard",
+    "Kent", "Montgomery", "Prince George's", "Queen Anne's", "St. Mary's", "Somerset",
+    "Talbot", "Washington", "Wicomico", "Worcester"
+  ],
+  "aliases": {
+    "pg": "Prince George's",
+    "prince georges": "Prince George's",
+    "aa": "Anne Arundel",
+    "baltimore": "Baltimore County",
+    "baltimore city": "Baltimore City",
+    "queen annes": "Queen Anne's",
+    "st marys": "St. Mary's",
+    "saint marys": "St. Mary's",
+    "fairfax": "Fairfax (VA)"
+  }
+}

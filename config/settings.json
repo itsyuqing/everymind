@@ -1,0 +1,53 @@
+{
+  "_comment": "Edit these values without touching code. Thresholds control when the dashboard warns about or hides small groups.",
+  "small_group_warn_n": 30,
+  "small_group_hide_n": 10,
+  "speeder_seconds": 15,
+  "agree_threshold": 4,
+  "promoter_min": 9,
+  "detractor_max": 6,
+  "likert_map": {
+    "strongly disagree": 1,
+    "disagree": 2,
+    "neither agree nor disagree": 3,
+    "neither agree or disagree": 3,
+    "agree": 4,
+    "strongly agree": 5,
+    "very agree": 5,
+    "satisfied": 4,
+    "totalmente en desacuerdo": 1,
+    "en desacuerdo": 2,
+    "ni de acuerdo ni en desacuerdo": 3,
+    "de acuerdo": 4,
+    "totalmente de acuerdo": 5
+  },
+  "nonstandard_likert_labels": ["very agree", "satisfied", "neither agree or disagree"],
+  "role_map": {
+    "student": "Student",
+    "school staff member": "School staff",
+    "caregiver/parent": "Caregiver/parent",
+    "other (e.g., community member)": "Community member"
+  },
+  "column_patterns": {
+    "id": [["id"]],
+    "start_time": [["start time"]],
+    "end_time": [["completion time"]],
+    "language": [["language"]],
+    "role": [["are you a"]],
+    "training_date": [["date of your training"]],
+    "county": [["county"]],
+    "post_identify": [["statements", "identify"]],
+    "post_describe": [["statements", "describe 988"]],
+    "post_when": [["statements", "when to use"]],
+    "pre_identify": [["think back", "identify"]],
+    "pre_describe": [["think back", "describe 988"]],
+    "pre_when": [["think back", "when to use"]],
+    "pres_engaged": [["engaged the participants"]],
+    "pres_knowledge": [["knew the subject"]],
+    "organized": [["well organized"]],
+    "recommend": [["recommend"]],
+    "call988": [["likely are you to call"]],
+    "valuable": [["most valuable"]],
+    "improve": [["improve this training"]]
+  }
+}

@@ -1,0 +1,22 @@
+# Installed packages (recreate with: npm install)
+frontend/node_modules/
+
+# Built files (recreate with: npm run build)
+frontend/dist/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Zips you made for Colab or sharing
+*.zip
+
+# EveryMind's survey data: never commit it
+data/
+output/
+frontend/src/data/dashboard_data.json
+
+# Editor / OS clutter
+.DS_Store
+Thumbs.db
+.vscode/
