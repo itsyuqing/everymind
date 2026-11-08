@@ -6,7 +6,7 @@ import type { Row } from '../lib/data';
 import { dateLabel } from '../lib/data';
 import { fmt, sessions, signed, type Filters, type Session } from '../lib/metrics';
 
-const PAGE = 15;
+const PAGE = 100; // show every session at once (there are ~60); Load More only appears beyond this
 const SORTS = {
   recent: { label: 'Most recent', fn: (a: Session, b: Session) => b.date.localeCompare(a.date) },
   responses: { label: 'Most responses', fn: (a: Session, b: Session) => b.n - a.n },
@@ -80,7 +80,7 @@ export function SessionExplorer({ rows, filters, setFilters, search }: { rows: R
       {list.length === 0 ? <div className="rounded-lg border border-dashed border-slate-300 py-12 text-center text-sm text-slate-500 dark:border-slate-700">No sessions match these filters.</div>
         : <SessionTable list={list} />}
 
-      <div className="mt-5 flex items-center justify-between">
+      <div className="mb-24 mt-5 flex items-center justify-between">
         <span className="text-[12px] text-slate-500">Showing {list.length} of {all.length} sessions</span>
         {shown < all.length && <Button variant="secondary" onClick={() => setShown(shown + PAGE)}>Load More</Button>}
       </div>
